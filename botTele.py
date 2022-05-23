@@ -66,7 +66,7 @@ def cve_func(update: Update, context: CallbackContext):
 <b>Assigner</b>: {3}
 <b>Published</b>: {4}
 <b>Summary</b>: {5}
-<b>References</b>: {6}""".format(id_cve, id_cve, cvss, assigner, publish, summary, refer),parse_mode='HTML')
+<b>References</b>: {6}""".format(id_cve, id_cve, cvss, assigner, publish, summary, refer[0:5]),parse_mode='HTML')
         else:
             update.message.reply_text("""<b>CVE not found</b>!!!
 <i>Please check the ID of the CVE.</i>""",parse_mode='HTML')
