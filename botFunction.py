@@ -2,6 +2,8 @@ import random
 import array
 import json
 import requests
+import subprocess as sb
+import os
 
 def genpass ():
 
@@ -84,4 +86,38 @@ def cve_latest():
     cve_latest_url = "https://cve.circl.lu/api/last"
     response = requests.get(cve_latest_url)
     result = json.loads(response.text)
+    return result
+
+def ping(ip):
+    cmd = "ping -c 1 {0} > /dev/null 2>&1".format(ip)
+    result = os.system('cmd')
+    if result == 0:
+        print("PC is online")
+        
+        
+def checkOnline(ip):
+    cmd_ping = "ping -c 1 {0}  > /dev/null 2>&1".format(ip)
+    result = os.system(cmd_ping)
+    if result == 0:
+        return 0
+    else:
+        return 1
+        
+def ping_server(ip):
+    cmd = "ping -c 10 {0}".format(ip)
+    result = os.system(cmd)
+    print(result)
+    
+    
+    
+def pport(ip, port):
+    cmd = 'nc -zv {0} {1}'.format(ip, port)
+    result = sb.getoutput(cmd)
+    return result
+    
+    
+
+def trace(ip):
+    cmd = "traceroute -n {0}".format(ip)
+    result = sb.getoutput(cmd)
     return result

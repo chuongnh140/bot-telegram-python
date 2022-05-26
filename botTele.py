@@ -25,6 +25,9 @@ def help(update: Update, context: CallbackContext):
     /quotes - To get a random quote
     /cve - To get information about a CVE number
     /latest_cve - To get the 5 latest CVEs
+    /check - Fast ping (ping 1 times)
+    /ping - ping 5 times
+    /trace - to tracert ip
     /help - To get help""")
     
     
@@ -89,7 +92,63 @@ def cve_latest_func(update: Update, context: CallbackContext):
 <b>Published</b>: {1}
 <b>Summary</b>: {2}""".format(id_cve, publish, summary),parse_mode='HTML')
     
+
+
+
+def checkServerOnline(update: Update, context: CallbackContext):
+    try:
+        ip = str(context.args[0])
+        result = checkOnline(ip)
+        if result == 0:
+            update.message.reply_text("""<b>Server {0} online</b>!!!""".format(ip),parse_mode='HTML')
+        else:
+            update.message.reply_text("""<b>Server {0} offline</b>!!!""".format(ip),parse_mode='HTML')
+    except (IndexError, ValueError):
+        update.message.reply_text("""<b>Please check syntax</b>.
+<i>Example: /check 10.18.200.101</i>""",parse_mode='HTML')
         
+
+
+def ping_server_func(update: Update, context: CallbackContext):
+    try:
+        count_package = 5
+        ip = str(context.args[0])
+        cmd = 'ping -c 1 {0} > /dev/null 2>&1'.format(ip)
+        for i in range(count_package):
+            result = os.system(cmd)
+            if result == 0:
+                update.message.reply_text("<b>Ping {0} ok</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
+            else:
+                update.message.reply_text("<b>Ping {0} fail</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
+    except (IndexError, ValueError):
+        update.message.reply_text("""<b>Please check syntax</b>.
+<i>Example: /ping 10.18.200.101</i>""",parse_mode='HTML')
+        
+
+
+def tracert_func(update: Update, context: CallbackContext):
+    try:
+        ip = str(context.args[0])
+        result = trace(ip)
+        update.message.reply_text(result)
+    except(IndexError, ValueError):
+        update.message.reply_text("""<b>Please check syntax</b>.
+<i>Example: /trace 10.18.200.101</i>""",parse_mode='HTML')
+        
+        
+# def pport_func(update: Update, context: CallbackContext):
+#     try:
+#         ip = str(context.args[0])
+#         port = str(context.args[1])
+#         result = pport(ip, port)
+#         update.message.reply_text(result)
+#     except(IndexError, ValueError):
+#         update.message.reply_text("""<b>Please check syntax</b>.
+# <i>Example: /port 10.100.10.160 3389</i>""",parse_mode='HTML')
+
+
+
+
 
 updater.dispatcher.add_handler(CommandHandler('start', start))
 updater.dispatcher.add_handler(CommandHandler('help', help))
@@ -97,6 +156,10 @@ updater.dispatcher.add_handler(CommandHandler('passwdgen', passwdgen))
 updater.dispatcher.add_handler(CommandHandler('quotes', quotes))
 updater.dispatcher.add_handler(CommandHandler('cve', cve_func))
 updater.dispatcher.add_handler(CommandHandler('latest_cve', cve_latest_func))
+updater.dispatcher.add_handler(CommandHandler('check', checkServerOnline))
+updater.dispatcher.add_handler(CommandHandler('ping', ping_server_func))
+updater.dispatcher.add_handler(CommandHandler('trace', tracert_func))
+#updater.dispatcher.add_handler(CommandHandler('port', pport_func))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
 updater.dispatcher.add_handler(MessageHandler(
