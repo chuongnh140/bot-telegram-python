@@ -103,7 +103,7 @@ def checkServerOnline(update: Update, context: CallbackContext):
         if result == 0:
             update.message.reply_text("""Server {0} <b>ONLINE</b> !!!""".format(ip),parse_mode='HTML')
         else:
-            update.message.reply_text("""<b>Server {0} <b>OFFLINE</b> !!!""".format(ip),parse_mode='HTML')
+            update.message.reply_text("""Server {0} <b>OFFLINE</b> !!!""".format(ip),parse_mode='HTML')
     except (IndexError, ValueError):
         update.message.reply_text("""<b>Please check syntax</b>.
 <i>Example: /check 10.18.200.101</i>""",parse_mode='HTML')
@@ -145,7 +145,7 @@ def port_func(update: Update, context: CallbackContext):
         update.message.reply_text(result)
     except(IndexError, ValueError):
         update.message.reply_text("""<b>Please check syntax</b>.
-<i>Example: /port 10.100.10.250 3389</i>""",parse_mode='HTML')
+<i>Example: /port 10.100.10.159 3389</i>""",parse_mode='HTML')
 
 
 
