@@ -28,6 +28,7 @@ def help(update: Update, context: CallbackContext):
     /check - Fast ping (ping 1 times)
     /ping - ping 5 times
     /trace - to tracert ip
+    /port - Check open port
     /help - To get help""")
     
     
@@ -100,9 +101,9 @@ def checkServerOnline(update: Update, context: CallbackContext):
         ip = str(context.args[0])
         result = checkOnline(ip)
         if result == 0:
-            update.message.reply_text("""<b>Server {0} online</b>!!!""".format(ip),parse_mode='HTML')
+            update.message.reply_text("""Server {0} <b>ONLINE</b> !!!""".format(ip),parse_mode='HTML')
         else:
-            update.message.reply_text("""<b>Server {0} offline</b>!!!""".format(ip),parse_mode='HTML')
+            update.message.reply_text("""<b>Server {0} <b>OFFLINE</b> !!!""".format(ip),parse_mode='HTML')
     except (IndexError, ValueError):
         update.message.reply_text("""<b>Please check syntax</b>.
 <i>Example: /check 10.18.200.101</i>""",parse_mode='HTML')
@@ -117,9 +118,9 @@ def ping_server_func(update: Update, context: CallbackContext):
         for i in range(count_package):
             result = os.system(cmd)
             if result == 0:
-                update.message.reply_text("<b>Ping {0} ok</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
+                update.message.reply_text("<b>Ping {0} SUCCEEDED</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
             else:
-                update.message.reply_text("<b>Ping {0} fail</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
+                update.message.reply_text("<b>Ping {0} FAILED</b>, icmp_seq={1}".format(ip, i),parse_mode='HTML')
     except (IndexError, ValueError):
         update.message.reply_text("""<b>Please check syntax</b>.
 <i>Example: /ping 10.18.200.101</i>""",parse_mode='HTML')
@@ -136,15 +137,15 @@ def tracert_func(update: Update, context: CallbackContext):
 <i>Example: /trace 10.18.200.101</i>""",parse_mode='HTML')
         
         
-# def pport_func(update: Update, context: CallbackContext):
-#     try:
-#         ip = str(context.args[0])
-#         port = str(context.args[1])
-#         result = pport(ip, port)
-#         update.message.reply_text(result)
-#     except(IndexError, ValueError):
-#         update.message.reply_text("""<b>Please check syntax</b>.
-# <i>Example: /port 10.100.10.160 3389</i>""",parse_mode='HTML')
+def port_func(update: Update, context: CallbackContext):
+    try:
+        ip = str(context.args[0])
+        port_number = str(context.args[1])
+        result = port(ip, port_number)
+        update.message.reply_text(result)
+    except(IndexError, ValueError):
+        update.message.reply_text("""<b>Please check syntax</b>.
+<i>Example: /port 10.100.10.250 3389</i>""",parse_mode='HTML')
 
 
 
@@ -159,7 +160,7 @@ updater.dispatcher.add_handler(CommandHandler('latest_cve', cve_latest_func))
 updater.dispatcher.add_handler(CommandHandler('check', checkServerOnline))
 updater.dispatcher.add_handler(CommandHandler('ping', ping_server_func))
 updater.dispatcher.add_handler(CommandHandler('trace', tracert_func))
-#updater.dispatcher.add_handler(CommandHandler('port', pport_func))
+updater.dispatcher.add_handler(CommandHandler('port', port_func))
 
 updater.dispatcher.add_handler(MessageHandler(Filters.text, unknown))
 updater.dispatcher.add_handler(MessageHandler(
